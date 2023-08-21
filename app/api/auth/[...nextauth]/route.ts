@@ -4,6 +4,7 @@ import GoogleProvider from "next-auth/providers/google";
 import User from "@models/user";
 import { connectToDB } from "@utils/database";
 
+//every next.js route is a serverless route ->lambda function
 
 const handler: NextAuthOptions = NextAuth({
   providers: [
