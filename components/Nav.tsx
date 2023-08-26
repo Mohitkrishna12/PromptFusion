@@ -22,13 +22,15 @@ const Nav = () => {
     <nav className="flex-between w-full mb-16 pt-3">
       <Link href="/" className="flex gap-2 flex-center">
         <Image
-          src="/assets/images/logo.svg"
+          src="/assets/images/logogn1.png"
           alt="logo"
-          width={30}
-          height={30}
+          width={45}
+          height={45}
           className="object-contain"
         />
-        <p className="logo_text">Promptopia</p>
+        <p className="logo_text">
+          Prompt<span className="green_gradient">Fusion</span>
+        </p>
       </Link>
 
       {/* Desktop Navigation */}
@@ -39,7 +41,11 @@ const Nav = () => {
               Create Post
             </Link>
 
-            <button type="button" onClick={()=>signOut()} className="outline_btn">
+            <button
+              type="button"
+              onClick={() => signOut()}
+              className="outline_btn"
+            >
               Sign Out
             </button>
 
@@ -56,7 +62,7 @@ const Nav = () => {
         ) : (
           <>
             {providers &&
-              Object.values(providers).map((provider:any) => (
+              Object.values(providers).map((provider: any) => (
                 <button
                   type="button"
                   key={provider.name}
@@ -117,7 +123,7 @@ const Nav = () => {
         ) : (
           <>
             {providers &&
-              Object.values(providers).map((provider:any) => (
+              Object.values(providers).map((provider: any) => (
                 <button
                   type="button"
                   key={provider.name}
