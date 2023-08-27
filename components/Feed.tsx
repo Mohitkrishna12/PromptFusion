@@ -3,51 +3,74 @@
 import { useState, useEffect } from "react";
 
 import PromptCard from "./PromptCard";
+import Card from "./Card";
 
-const PromptCardList = ({ data, handleTagClick }:any) => {
+const PromptCardList = ({ data, handleTagClick }: any) => {
   return (
     <div className="mt-16 prompt_layout">
-      {data.map((post:any) => (
-        <PromptCard
-          key={post._id}
-          post={post}
-          handleTagClick={handleTagClick}
-        />
-      ))}
+      {data
+        ?.sort((a:any, b:any) => a.prompt.localeCompare(b.prompt))
+        .map((post: any) => {
+          console.log(post)
+          if (post.photo) {
+            return <Card key={post._id} {...post} />;
+          } else {
+            return (
+              <PromptCard
+                key={post?._id}
+                post={post}
+                handleTagClick={handleTagClick}
+              />
+            );
+          }
+        })}
     </div>
   );
 };
 
+const RenderCards = ({ data, title }: any) => {
+  if (data?.length > 0) {
+    return data.map((post: any) => <Card key={post._id} {...post} />);
+  }
+
+  return (
+    <h2 className="mt-5 font-bold text-[#6469ff] text-xl uppercase">{title}</h2>
+  );
+};
+
 const Feed = () => {
-  const [allPosts, setAllPosts] = useState([]);
+  const [allPosts, setAllPosts]: Array<any> = useState([]);
 
   // Search states
   const [searchText, setSearchText] = useState("");
-  const [searchTimeout, setSearchTimeout]:any = useState(null);
+  const [searchTimeout, setSearchTimeout]: any = useState(null);
   const [searchedResults, setSearchedResults] = useState([]);
 
   const fetchPosts = async () => {
-    const response = await fetch("/api/prompt");
-    const data = await response.json();
+    const imageResponse = await fetch("/api/ai-img");
+    const imageData = await imageResponse.json();
+    const promptResponse = await fetch("/api/prompt");
+    const promptData = await promptResponse.json();
 
-    setAllPosts(data);
+    setAllPosts((prev: any) => [...prev, ...imageData, ...promptData]);
   };
 
   useEffect(() => {
     fetchPosts();
   }, []);
 
-  const filterPrompts = (searchtext:any) => {
+  console.log(allPosts);
+  const filterPrompts = (searchtext: any) => {
     const regex = new RegExp(searchtext, "i"); // 'i' flag for case-insensitive search
-    return allPosts.filter(
-      (item:any) =>
+    return allPosts?.filter(
+      (item: any) =>
         regex.test(item?.creator?.username) ||
         regex.test(item?.tag) ||
         regex.test(item?.prompt)
     );
   };
 
-  const handleSearchChange = (e:any) => {
+  const handleSearchChange = (e: any) => {
     clearTimeout(searchTimeout);
     setSearchText(e.target.value);
 
@@ -60,7 +83,7 @@ const Feed = () => {
     );
   };
 
-  const handleTagClick = (tagName:any) => {
+  const handleTagClick = (tagName: any) => {
     setSearchText(tagName);
 
     const searchResult = filterPrompts(tagName);
