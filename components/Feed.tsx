@@ -38,7 +38,7 @@ const RenderCards = ({ data, title }: any) => {
   );
 };
 
-const Feed = () => {
+const Feed = ({page}:any) => {
   const [allPosts, setAllPosts]: Array<any> = useState([]);
 
   // Search states
