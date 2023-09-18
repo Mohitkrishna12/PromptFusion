@@ -4,12 +4,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { signIn, signOut, useSession, getProviders } from "next-auth/react";
+import {usePathname} from 'next/navigation'
 
 const Nav = () => {
   const { data: session } = useSession();
-
   const [providers, setProviders] = useState(null);
   const [toggleDropdown, setToggleDropdown] = useState(false);
+  const path = usePathname();
+  console.log(path)
 
   useEffect(() => {
     (async () => {
@@ -37,13 +39,15 @@ const Nav = () => {
       <div className="sm:flex hidden">
         {session?.user ? (
           <div className="flex gap-3 md:gap-5">
+            {path === "/ai-image" &&
             <Link href="/prompt" className="black_btn">
               Prompt
-            </Link>
-            <Link href="/ai-image" className="black_btn">
+            </Link>}
+            {path === "/prompt" &&
+            <Link href="/ai-image"  className="black_btn">
               Ai-image
-            </Link>
-            <Link href="/create-prompt" className="black_btn">
+            </Link>}
+            <Link href={"/create"+path} className="black_btn">
               Create
             </Link>
             <button
