@@ -2,7 +2,6 @@ import Feed from '@components/Feed';
 import React from 'react'
 
 const page = ({params}:any) => {
-    console.log(params)
   return (
     <section className="w-full flex-center flex-col">
       <h1 className="head_text text-center">
@@ -10,7 +9,7 @@ const page = ({params}:any) => {
         <br className="max-md:hidden" />
         <span className="green_gradient text-center">
           {" "}
-          AI-Powered Prompts & Images
+          AI-Powered Images & Prompts
         </span>
       </h1>
       <p className="desc text-center">

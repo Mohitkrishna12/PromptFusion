@@ -5,38 +5,37 @@ import { useState, useEffect } from "react";
 import PromptCard from "./PromptCard";
 import Card from "./Card";
 
-const PromptCardList = ({ data, handleTagClick }: any) => {
+const PromptImageList = ({ data, handleTagClick }: any) => {
   return (
-    <div className="mt-16 prompt_layout">
+    <div className="grid lg:grid-cols-4 sm:grid-cols-3 xs:grid-cols-2 grid-cols-1 gap-3 mt-16">
       {data
-        ?.sort((a:any, b:any) => a.prompt.localeCompare(b.prompt))
-        .map((post: any) => {
-          console.log(post)
-          if (post.photo) {
+        ?.map((post: any) => {
+          if (post?.photo) {
             return <Card key={post._id} {...post} />;
-          } else {
-            return (
-              <PromptCard
-                key={post?._id}
-                post={post}
-                handleTagClick={handleTagClick}
-              />
-            );
-          }
+          } 
         })}
     </div>
   );
 };
 
-const RenderCards = ({ data, title }: any) => {
-  if (data?.length > 0) {
-    return data.map((post: any) => <Card key={post._id} {...post} />);
-  }
-
+const PromptCardList = ({ data, handleTagClick }: any) => {
   return (
-    <h2 className="mt-5 font-bold text-[#6469ff] text-xl uppercase">{title}</h2>
+    <div className="mt-16 prompt_layout">
+      {data?.map((post: any) => {
+        if (!post?.photo) {
+          return (
+              <PromptCard
+                key={post?._id}
+                post={post}
+                handleTagClick={handleTagClick}
+              />
+          );
+        }
+      })}
+    </div>
   );
 };
+
 
 const Feed = ({page}:any) => {
   const [allPosts, setAllPosts]: Array<any> = useState([]);
@@ -47,12 +46,9 @@ const Feed = ({page}:any) => {
   const [searchedResults, setSearchedResults] = useState([]);
 
   const fetchPosts = async () => {
-    const imageResponse = await fetch("/api/ai-img");
-    const imageData = await imageResponse.json();
-    const promptResponse = await fetch("/api/prompt");
-    const promptData = await promptResponse.json();
-
-    setAllPosts((prev: any) => [...prev, ...imageData, ...promptData]);
+    const response = await fetch("/api/"+page);
+    const data = await response.json();
+    setAllPosts(data);
   };
 
   useEffect(() => {
@@ -91,8 +87,8 @@ const Feed = ({page}:any) => {
   };
 
   return (
-    <section className="feed">
-      <form className="relative w-full flex-center">
+    <section className="feed mb-16">
+      <form className="relative w-full max-w-xl flex-center">
         <input
           type="text"
           placeholder="Search for a tag or a username"
@@ -110,7 +106,8 @@ const Feed = ({page}:any) => {
           handleTagClick={handleTagClick}
         />
       ) : (
-        <PromptCardList data={allPosts} handleTagClick={handleTagClick} />
+        page === "prompt" && <PromptCardList data={allPosts} handleTagClick={handleTagClick} /> ||
+        page === "ai-image" && <PromptImageList data={allPosts} handleTagClick={handleTagClick} />
       )}
     </section>
   );

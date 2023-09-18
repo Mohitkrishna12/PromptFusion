@@ -2,7 +2,7 @@ import Feed from "@components/Feed";
 import { redirect } from "next/navigation";
 
 const Home = () => {
-  redirect("/prompt")
+  redirect("/ai-image")
 }
 
 export default Home
