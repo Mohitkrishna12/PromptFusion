@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import  FormField from "@components/FormField";
 
@@ -9,18 +9,31 @@ const CreatePost = () => {
   const [form, setForm] = useState({
     name: "",
     prompt: "",
-    photo: "",
+    photo: '',
+    userId: "65082b002504d81169d1ab4e",
   });
 
   const [generatingImg, setGeneratingImg] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [allPrompts,setAllPrompts] = useState([]);
+
+   const fetchPosts = async () => {
+     const response = await fetch("/api/prompt");
+     const data = await response.json();
+     setAllPrompts(data);
+   };
+
+   useEffect(() => {
+     fetchPosts();
+   }, []);
+
 
   const handleChange = (e: any) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
   const handleSurpriseMe = () => {
     const getPrompt = ""
-    // getRandomPrompt(form.prompt);
+    //getRandomPrompt(form.prompt);
     setForm({ ...form, prompt: getPrompt });
   };
   const generateImage = async () => {
@@ -29,7 +42,7 @@ const CreatePost = () => {
       try {
         setGeneratingImg(true);
         const response = await fetch(
-          "http://localhost:8080/api/v1/ai-img/generate",
+          "/api/ai-image/generate",
           {
             method: "POST",
             headers: {
@@ -56,7 +69,7 @@ const CreatePost = () => {
     if (form.prompt && form.photo) {
       setLoading(true);
       try {
-        const response = await fetch("http://localhost:8080/api/v1/post/save", {
+        const response = await fetch("/api/ai-image/post", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -103,7 +116,7 @@ const CreatePost = () => {
 
           <FormField
             labelName="Prompt"
-            type="text"
+            type="select"
             name="prompt"
             placeholder="An Impressionist oil painting of sunflowers in a purple vase…"
             value={form.prompt}

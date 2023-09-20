@@ -1,9 +1,8 @@
 import Post from "@models/post";
 import { connectToDB } from "@utils/database";
-import { v2 as cloudinary } from "cloudinary";
 
 
-export const GET = async (request: any) => {
+export const GET = async () => {
   try {
     await connectToDB();
 
