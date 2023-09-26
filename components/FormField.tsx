@@ -9,6 +9,7 @@ const FormField = ({
   handleChange,
   isSurpriseMe,
   handleSurpriseMe,
+  allPrompts,
 }: any) => (
   <div>
     <div className="flex items-center gap-2 mb-2">
@@ -22,22 +23,39 @@ const FormField = ({
         <button
           type="button"
           onClick={handleSurpriseMe}
-          className="font-semibold text-xs bg-orange-600 py-1 px-2 rounded-[5px] text-white"
+          className="font-semibold text-xs bg-[#6469ff] py-1 px-2 rounded-[5px] text-white"
         >
           Surprise me
         </button>
       )}
     </div>
-    <input
-      type={type}
-      id={name}
-      name={name}
-      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#6469ff] focus:border-[#6469ff] outline-none block w-full p-3"
-      placeholder={placeholder}
-      value={value}
-      onChange={handleChange}
-      required
-    />
+    {isSurpriseMe ? (
+      <select
+        id={name}
+        name={name}
+        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#6469ff] focus:border-[#6469ff] outline-none block w-full p-3"
+        placeholder={placeholder}
+        value={value}
+        onChange={handleChange}
+        required
+      >
+        <option hidden></option>
+        {allPrompts?.map((e: any) => {
+          return <option key={e.id}>{e?.prompt}</option>;
+        })}
+      </select>
+    ) : (
+      <input
+        type={type}
+        id={name}
+        name={name}
+        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#6469ff] focus:border-[#6469ff] outline-none block w-full p-3"
+        placeholder={placeholder}
+        value={value}
+        onChange={handleChange}
+        required
+      />
+    )}
   </div>
 );
 

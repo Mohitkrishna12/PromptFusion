@@ -40,11 +40,45 @@ const CreatePrompt = () => {
   return (
     <Form
       type="Create"
+      title="Prompt"
+      subTitle="Create and share amazing prompts with the world, and let your
+        imagination run wild with any AI-powered platform"
       post={post}
       setPost={setPost}
       submitting={submitting}
       handleSubmit={createPrompt}
-    />
+    >
+      <label>
+        <span className="font-satoshi font-semibold text-base text-gray-400">
+          Your AI Prompt
+        </span>
+
+        <textarea
+          value={post.prompt}
+          onChange={(e) => setPost({ ...post, prompt: e.target.value })}
+          placeholder="Write your post here"
+          required
+          className="form_textarea "
+        />
+      </label>
+
+      <label>
+        <span className="font-satoshi font-semibold text-base text-gray-400">
+          Field of Prompt{" "}
+          <span className="font-normal">
+            (#product, #webdevelopment, #idea, etc.)
+          </span>
+        </span>
+        <input
+          value={post.tag}
+          onChange={(e) => setPost({ ...post, tag: e.target.value })}
+          type="text"
+          placeholder="#Tag"
+          required
+          className="form_input"
+        />
+      </label>
+    </Form>
   );
 };
 
