@@ -18,12 +18,14 @@ const CreatePrompt = () => {
     setIsSubmitting(true);
 
     try {
+      const tagArray = post?.tag?.split(/[ ,]+/);
+      console.log(tagArray)
       const response = await fetch("/api/prompt/new", {
         method: "POST",
         body: JSON.stringify({
           prompt: post.prompt,
           userId: session?.user?.id,
-          tag: post.tag,
+          tag: tagArray,
         }),
       });
 
@@ -66,7 +68,8 @@ const CreatePrompt = () => {
         <span className="font-satoshi font-semibold text-base text-gray-400">
           Field of Prompt{" "}
           <span className="font-normal">
-            (#product, #webdevelopment, #idea, etc.)
+            (Separate tags with spaces or commas e.g., #blockchain #dev
+            or #product, #webdevelopment)
           </span>
         </span>
         <input
