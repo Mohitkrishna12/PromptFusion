@@ -15,7 +15,6 @@ const Form = ({ type, submitting, handleSubmit,title,subTitle,children }:any) =>
         onSubmit={handleSubmit}
         className="mt-10 w-full max-w-2xl flex flex-col gap-7 glassmorphism"
       >
-        
         {children}
         <div className="flex-end mx-3 mb-5 gap-4">
           <Link href="/" className="text-gray-300 text-sm">
