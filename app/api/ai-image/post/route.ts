@@ -13,7 +13,7 @@ export const POST = async (request: any) => {
   try {
     await connectToDB();
     const photoUrl = await cloudinary.uploader.upload(photo);
-    const newPrompt = new Post({ creator: userId, prompt,name,photo:photoUrl.url });
+    const newPrompt = new Post({ creator: userId, prompt,photo:photoUrl.url });
 
     await newPrompt.save();
     return new Response(JSON.stringify(newPrompt), { status: 201 });
