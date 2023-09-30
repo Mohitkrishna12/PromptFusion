@@ -4,18 +4,21 @@ import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Form from "@components/Form";
 import Autosuggest from "react-autosuggest";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const CreatePost = () => {
   const [form, setForm] = useState({
-    name: "",
     prompt: "",
     photo: "",
-    userId: "65082b002504d81169d1ab4e",
   });
-
+  const router = useRouter();
+  const { data: session }: any = useSession();
+  const [submitting, setIsSubmitting] = useState(false);
   const [generatingImg, setGeneratingImg] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [allPrompts, setAllPrompts] = useState([]);
+  const [suggestionsVisible, setSuggestionsVisible] = useState(false); 
+  const inputRef = useRef(null);
 
   const fetchPosts = async () => {
     const response = await fetch("/api/prompt");
@@ -27,14 +30,6 @@ const CreatePost = () => {
     fetchPosts();
   }, []);
 
-  const handleChange = (e: any) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-  const handleSurpriseMe = () => {
-    const getPrompt = "";
-    //getRandomPrompt(form.prompt);
-    setForm({ ...form, prompt: getPrompt });
-  };
   const generateImage = async () => {
     //api call to backend to get ai img
     if (form.prompt) {
@@ -52,7 +47,7 @@ const CreatePost = () => {
         setForm({ ...form, photo: `data:image/jpeg;base64,${result?.photo}` });
         console.log(result);
       } catch (err) {
-        console.log(err);
+        alert(err);
       } finally {
         setGeneratingImg(false);
       }
@@ -63,23 +58,23 @@ const CreatePost = () => {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     if (form.prompt && form.photo) {
-      setLoading(true);
+      setIsSubmitting(true);
       try {
         const response = await fetch("/api/ai-image/post", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ ...form }),
+          body: JSON.stringify({...form, userId: session?.user?.id }),
         });
         await response.json();
-        console.log(response);
-        //alert("Success");
-        //navigate("/");
+        if(response.ok){
+          router.push('/');
+        }
       } catch (error) {
         alert(error);
       } finally {
-        setLoading(false);
+        setIsSubmitting(false);
       }
     } else {
       alert("Please generate an image with proper details");
@@ -87,20 +82,24 @@ const CreatePost = () => {
   };
   console.log(form);
 
-  const [searchValue, setSearchValue] = useState("");
-  const [selectedItem, setSelectedItem] = useState(null);
-  const [suggestionsVisible, setSuggestionsVisible] = useState(false); // Control visibility of suggestions
-  const submitting = false; //
-  const inputRef = useRef(null);
+//to get random prompt from the prompt list
+  const getRandomPrompt: any = (promt: string) => {
+    const randomIndex = Math.floor(Math.random() * allPrompts.length);
+    const randomPromt:any = allPrompts[randomIndex];
+    return promt === randomPromt?.prompt ? getRandomPrompt(promt) : randomPromt?.prompt;
+  };
+
+  const handleSurpriseMe = () => {
+    const getPrompt = getRandomPrompt(form.prompt);
+    setForm({ ...form, prompt: getPrompt });
+  };
 
   // Function to handle selecting an item from the search results
   const handleSelectItem = (item: any) => {
-    setSelectedItem(item);
-    setSearchValue(item?.prompt); // Set the search input field to the selected item
+    setForm({ ...form,prompt:item?.prompt}); // Set the search input field to the selected item
     setSuggestionsVisible(false);
   };
 
-  // Function to handle form submission
 
   // Function to get matching prompts or tags based on user input
   const getSuggestions = (value: any) => {
@@ -116,7 +115,7 @@ const CreatePost = () => {
             )
         );
   };
-  console.log(searchValue)
+  console.log(form)
 
   return (
     <Form
@@ -124,10 +123,8 @@ const CreatePost = () => {
       title="Ai-Image"
       subTitle="Generate an imaginative AI image with the help of prompts and share it
           with the community"
-      post={form}
-      // setPost={setPost}
-      // submitting={submitting}
-      // handleSubmit={createPrompt}
+      submitting={submitting}
+      handleSubmit={handleSubmit}
     >
       <div className="flex flex-col gap-5">
         <div className="flex items-center gap-2 ">
@@ -149,9 +146,9 @@ const CreatePost = () => {
           <input
             type="text"
             placeholder="Search for prompts or tags"
-            value={searchValue}
+            value={form?.prompt}
             onChange={(e) => {
-              setSearchValue(e.target.value);
+              setForm({ ...form, prompt: e.target.value });
               setSuggestionsVisible(true); // Show suggestions on input change
             }}
             onFocus={() => setSuggestionsVisible(true)} // Show suggestions on input focus
@@ -165,16 +162,14 @@ const CreatePost = () => {
           />
           {suggestionsVisible && (
             <div className="absolute top-12 left-0 w-full bg-white border border-gray-300 shadow-lg py-1 z-10">
-              {getSuggestions(searchValue).map((item: any, index) => (
+              {getSuggestions(form?.prompt).map((item: any, index) => (
                 <div
                   key={index}
                   className="cursor-pointer px-4 py-2 hover:bg-gray-100"
                   onClick={() => handleSelectItem(item)}
                 >
                   {item?.prompt}{" "}
-                  <span className="text-green-500">
-                    {item?.tag?.join(" ")}
-                  </span>
+                  <span className="text-green-500">{item?.tag?.join(" ")}</span>
                 </div>
               ))}
             </div>
@@ -209,7 +204,7 @@ const CreatePost = () => {
         <button
           type="button"
           onClick={generateImage}
-          className=" text-white bg-green-700 font-medium rounded-md text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+          className=" text-white bg-orange-600 rounded-full font-semibold text-sm  sm:w-auto px-5 py-1.5 text-center"
         >
           {generatingImg ? "Generating..." : "Generate"}
         </button>

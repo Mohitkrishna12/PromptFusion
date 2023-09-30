@@ -45,8 +45,6 @@ const CreatePrompt = () => {
       title="Prompt"
       subTitle="Create and share amazing prompts with the world, and let your
         imagination run wild with any AI-powered platform"
-      post={post}
-      setPost={setPost}
       submitting={submitting}
       handleSubmit={createPrompt}
     >
@@ -54,7 +52,6 @@ const CreatePrompt = () => {
         <span className="font-satoshi font-semibold text-base text-gray-400">
           Your AI Prompt
         </span>
-
         <textarea
           value={post.prompt}
           onChange={(e) => setPost({ ...post, prompt: e.target.value })}
