@@ -91,7 +91,7 @@ const Feed = ({page}:any) => {
       <form className="relative w-full max-w-xl flex-center">
         <input
           type="text"
-          placeholder="Search for a tag or a username"
+          placeholder="Search for a prompt, tag or a username"
           value={searchText}
           onChange={handleSearchChange}
           required
@@ -100,14 +100,14 @@ const Feed = ({page}:any) => {
       </form>
 
       {/* All Prompts */}
-      {searchText ? (
+      {page === "prompt" && (
         <PromptCardList
-          data={searchedResults}
+          data={searchText ? searchedResults : allPosts}
           handleTagClick={handleTagClick}
         />
-      ) : (
-        page === "prompt" && <PromptCardList data={allPosts} handleTagClick={handleTagClick} /> ||
-        page === "ai-image" && <PromptImageList data={allPosts} handleTagClick={handleTagClick} />
+      )}
+      {page === "ai-image" && (
+        <PromptImageList data={searchText ? searchedResults : allPosts} />
       )}
     </section>
   );
