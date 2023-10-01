@@ -5,12 +5,14 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { signIn, signOut, useSession, getProviders } from "next-auth/react";
 import {usePathname} from 'next/navigation'
+import { useRouter } from "next/navigation";
 
 const Nav = () => {
   const { data: session } = useSession();
   const [providers, setProviders] = useState(null);
   const [toggleDropdown, setToggleDropdown] = useState(false);
   const path = usePathname();
+  const router = useRouter();
   console.log(path)
 
   useEffect(() => {
@@ -39,26 +41,71 @@ const Nav = () => {
       <div className="sm:flex hidden">
         {session?.user ? (
           <div className="flex gap-3 md:gap-5">
-            {path === "/ai-image" &&
-            <Link href="/prompt" className="black_btn">
+            <Link
+              href="/ai-image"
+              className={`py-1.5 px-3 transition-all font-bold text-base ${
+                path === "/ai-image" ? "green_gradient" : "text-white"
+              } hover:text-gray-300 text-center font-inter flex items-center justify-center`}
+            >
+              Ai-Image
+            </Link>
+            <Link
+              href="/prompt"
+              className={`py-1.5 px-3 transition-all font-bold text-base ${
+                path === "/prompt" ? "green_gradient" : "text-white"
+              } hover:text-gray-300 text-center font-inter flex items-center justify-center`}
+            >
               Prompt
-            </Link>}
-            {path === "/prompt" &&
-            <Link href="/ai-image"  className="black_btn">
-              Ai-image
-            </Link>}
-            <Link href={"/create"+path} className="black_btn">
+            </Link>
+            <Link
+              href={(path === "/ai-image"||path === "/prompt") ? "/create" + path :""}
+              className={`py-1.5 px-5 transition-all font-bold text-base ${path.includes("/create") ?"green_gradient":"blue_gradient"} hover:text-gray-300 text-center font-inter flex items-center justify-center`}
+            >
               Create
             </Link>
-            <button
+            {/* <button
               type="button"
               onClick={() => signOut()}
               className="outline_btn"
             >
               Sign Out
-            </button>
+            </button> */}
+            <div className="relative">
+              <Image
+                src={session?.user.image || ""}
+                width={37}
+                height={37}
+                className="rounded-full"
+                alt="profile"
+                onClick={() => setToggleDropdown(!toggleDropdown)}
+              />
 
-            <Link href="/profile">
+              {toggleDropdown && (
+                <div className="absolute right-0 mt-2 w-56 bg-white/20 rounded-lg shadow-lg p-2 space-y-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      router.push("/profile");
+                      setToggleDropdown(false);
+                    }}
+                    className="mt-2 w-full black_btn"
+                  >
+                    My Profile
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setToggleDropdown(false);
+                      signOut();
+                    }}
+                    className="mt-2 w-full black_btn"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              )}
+            </div>
+            {/* <Link href="/profile">
               <Image
                 src={session?.user?.image || ""}
                 width={37}
@@ -66,7 +113,7 @@ const Nav = () => {
                 className="rounded-full"
                 alt="profile"
               />
-            </Link>
+            </Link> */}
           </div>
         ) : (
           <>
@@ -78,7 +125,7 @@ const Nav = () => {
                   onClick={() => {
                     signIn(provider.id);
                   }}
-                  className="black_btn"
+                  className="outline_btn"
                 >
                   Sign in
                 </button>
