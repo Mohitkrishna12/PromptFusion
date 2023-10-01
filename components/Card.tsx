@@ -1,7 +1,10 @@
 import React from "react";
+import Image from "next/image";
+import FileSaver from "file-saver";
 
-// import { download } from "../assets";
-// import { downloadImage } from "../utils";
+const downloadImage = async (id: any, photo: any) => {
+  FileSaver.saveAs(photo, `download-${id}.jpg`);
+};
 
 const Card = ({ _id, prompt, photo, creator }: any) => (
   <div className="rounded-xl group relative shadow-card hover:shadow-cardhover card">
@@ -15,21 +18,29 @@ const Card = ({ _id, prompt, photo, creator }: any) => (
 
       <div className="mt-5 flex justify-between items-center gap-2">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-full object-cover bg-green-700 flex justify-center items-center text-white text-xs font-bold">
-            {creator?.username[0]}
-          </div>
+          {/* <div className="w-7 h-7 rounded-full object-cover bg-green-700 flex justify-center items-center text-white text-xs font-bold"> */}
+            <Image
+              src={creator?.image}
+              alt="user_image"
+              width={40}
+              height={40}
+              className="rounded-full object-contain"
+            />
+          {/* </div> */}
           <p className="text-white text-sm">{creator?.username}</p>
         </div>
         <button
           type="button"
-          //onClick={() => downloadImage(_id, photo)}
+          onClick={() => downloadImage(_id, photo)}
           className="outline-none bg-transparent border-none"
         >
-          {/* <img
-            src={download}
-            alt="download"
-            className="w-6 h-6 object-contain invert"
-          /> */}
+          <Image
+            src={"/assets/images/download.png"}
+            alt={"copy_icon"}
+            width={15}
+            height={15}
+            className="invert"
+          />
         </button>
       </div>
     </div>
