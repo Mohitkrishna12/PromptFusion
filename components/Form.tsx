@@ -24,7 +24,7 @@ const Form = ({ type, submitting, handleSubmit,title,subTitle,children }:any) =>
             disabled={submitting}
             className="px-5 py-1.5 text-sm font-semibold bg-green-700 rounded-full text-white"
           >
-            {submitting ? `${type}ing...` : type}
+            {submitting ? `${type.slice(0,-1)}ing...` : type}
           </button>
         </div>
       </form>
