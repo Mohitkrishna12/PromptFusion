@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 
 import PromptCard from "./PromptCard";
 import Card from "./Card";
+import NoResultCard from "./NoResultCard";
 
 const PromptImageList = ({ data, handleTagClick }: any) => {
   return (
@@ -101,13 +102,25 @@ const Feed = ({page}:any) => {
 
       {/* All Prompts */}
       {page === "prompt" && (
-        <PromptCardList
-          data={searchText ? searchedResults : allPosts}
-          handleTagClick={handleTagClick}
-        />
+        <div>
+          {searchText && searchedResults.length === 0 ? (
+            <NoResultCard searchText={searchText} />
+          ) : (
+            <PromptCardList
+              data={searchText ? searchedResults : allPosts}
+              handleTagClick={handleTagClick}
+            />
+          )}
+        </div>
       )}
       {page === "ai-image" && (
-        <PromptImageList data={searchText ? searchedResults : allPosts} />
+        <div>
+          {searchText && searchedResults.length === 0 ? (
+            <NoResultCard searchText={searchText} />
+          ) : (
+            <PromptImageList data={searchText ? searchedResults : allPosts} />
+          )}
+        </div>
       )}
     </section>
   );
