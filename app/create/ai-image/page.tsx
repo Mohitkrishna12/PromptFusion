@@ -6,6 +6,7 @@ import Form from "@components/Form";
 import Autosuggest from "react-autosuggest";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Loader from "@components/Loader";
 
 const CreatePost = () => {
   const [form, setForm] = useState({
@@ -194,7 +195,7 @@ const CreatePost = () => {
 
           {generatingImg && (
             <div className="absolute inset-0 z-0 flex justify-center items-center bg-[rgba(0,0,0,0.5)] rounded-lg">
-              {/* <Loader /> */}
+              <Loader />
             </div>
           )}
         </div>
