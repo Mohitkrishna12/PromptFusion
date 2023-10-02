@@ -19,6 +19,7 @@ const CreatePost = () => {
   const [generatingImg, setGeneratingImg] = useState(false);
   const [allPrompts, setAllPrompts] = useState([]);
   const [suggestionsVisible, setSuggestionsVisible] = useState(false); 
+  const [formError,setFormError] = useState(false);
   const inputRef = useRef(null);
 
   const fetchPosts = async () => {
@@ -36,6 +37,7 @@ const CreatePost = () => {
     if (form.prompt) {
       try {
         setGeneratingImg(true);
+        setFormError(false);
         const response = await fetch("/api/ai-image/generate", {
           method: "POST",
           headers: {
@@ -53,13 +55,15 @@ const CreatePost = () => {
         setGeneratingImg(false);
       }
     } else {
-      alert("Please provide proper prompt");
+      setFormError(true);
+      console.log("Please provide proper prompt");
     }
   };
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     if (form.prompt && form.photo) {
       setIsSubmitting(true);
+      setFormError(false);
       try {
         const response = await fetch("/api/ai-image/post", {
           method: "POST",
@@ -78,7 +82,8 @@ const CreatePost = () => {
         setIsSubmitting(false);
       }
     } else {
-      alert("Please generate an image with proper details");
+      setFormError(true);
+      console.log("Please generate an image with proper details");
     }
   };
   console.log(form);
@@ -148,6 +153,7 @@ const CreatePost = () => {
             type="text"
             placeholder="Search for prompts or tags"
             value={form?.prompt}
+            required
             onChange={(e) => {
               setForm({ ...form, prompt: e.target.value });
               setSuggestionsVisible(true); // Show suggestions on input change
@@ -199,6 +205,7 @@ const CreatePost = () => {
             </div>
           )}
         </div>
+        {formError && <span className="text-red-500">**Please generate an Ai-Image with prompt</span>}
       </div>
 
       <div className="flex gap-5">
