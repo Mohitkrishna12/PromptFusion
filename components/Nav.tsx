@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { signIn, signOut, useSession, getProviders } from "next-auth/react";
-import {usePathname} from 'next/navigation'
+import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 
 const Nav = () => {
@@ -13,11 +13,11 @@ const Nav = () => {
   const [toggleDropdown, setToggleDropdown] = useState(false);
   const path = usePathname();
   const router = useRouter();
-  console.log(path)
+  console.log(path);
 
   useEffect(() => {
     (async () => {
-      const res:any = await getProviders();
+      const res: any = await getProviders();
       setProviders(res);
     })();
   }, []);
@@ -39,73 +39,80 @@ const Nav = () => {
 
       {/* Desktop Navigation */}
       <div className="sm:flex hidden">
-        {session?.user ? (
-          <div className="flex gap-3 md:gap-5">
-            <Link
-              href="/ai-image"
-              className={`py-1.5 px-3 transition-all font-bold text-base ${
-                path === "/ai-image" ? "green_gradient" : "text-white"
-              } hover:text-gray-300 text-center font-inter flex items-center justify-center`}
-            >
-              Ai-Image
-            </Link>
-            <Link
-              href="/prompt"
-              className={`py-1.5 px-3 transition-all font-bold text-base ${
-                path === "/prompt" ? "green_gradient" : "text-white"
-              } hover:text-gray-300 text-center font-inter flex items-center justify-center`}
-            >
-              Prompt
-            </Link>
-            <Link
-              href={(path === "/ai-image"||path === "/prompt") ? "/create" + path :""}
-              className={`py-1.5 px-5 transition-all font-bold text-base ${path.includes("/create") ?"green_gradient":"blue_gradient"} hover:text-gray-300 text-center font-inter flex items-center justify-center`}
-            >
-              Create
-            </Link>
-            {/* <button
+        <div className="flex gap-3 md:gap-5">
+          <Link
+            href="/ai-image"
+            className={`py-1.5 px-3 transition-all font-bold text-base ${
+              path === "/ai-image" ? "green_gradient" : "text-white"
+            } hover:text-gray-300 text-center font-inter flex items-center justify-center`}
+          >
+            Ai-Image
+          </Link>
+          <Link
+            href="/prompt"
+            className={`py-1.5 px-3 transition-all font-bold text-base ${
+              path === "/prompt" ? "green_gradient" : "text-white"
+            } hover:text-gray-300 text-center font-inter flex items-center justify-center`}
+          >
+            Prompt
+          </Link>
+          {session?.user ? (
+            <>
+              <Link
+                href={
+                  path === "/ai-image" || path === "/prompt"
+                    ? "/create" + path
+                    : ""
+                }
+                className={`py-1.5 px-5 transition-all font-bold text-base ${
+                  path.includes("/create") ? "green_gradient" : "blue_gradient"
+                } hover:text-gray-300 text-center font-inter flex items-center justify-center`}
+              >
+                Create
+              </Link>
+              {/* <button
               type="button"
               onClick={() => signOut()}
               className="outline_btn"
             >
               Sign Out
             </button> */}
-            <div className="relative">
-              <Image
-                src={session?.user.image || ""}
-                width={37}
-                height={37}
-                className="rounded-full"
-                alt="profile"
-                onClick={() => setToggleDropdown(!toggleDropdown)}
-              />
+              <div className="relative">
+                <Image
+                  src={session?.user.image || ""}
+                  width={37}
+                  height={37}
+                  className="rounded-full"
+                  alt="profile"
+                  onClick={() => setToggleDropdown(!toggleDropdown)}
+                />
 
-              {toggleDropdown && (
-                <div className="absolute right-0 mt-2 w-56 bg-white/20 rounded-lg shadow-lg p-2 space-y-2">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      router.push("/profile");
-                      setToggleDropdown(false);
-                    }}
-                    className="mt-2 w-full black_btn"
-                  >
-                    My Profile
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setToggleDropdown(false);
-                      signOut();
-                    }}
-                    className="mt-2 w-full black_btn"
-                  >
-                    Sign Out
-                  </button>
-                </div>
-              )}
-            </div>
-            {/* <Link href="/profile">
+                {toggleDropdown && (
+                  <div className="absolute right-0 mt-2 w-56 bg-white/20 rounded-lg shadow-lg p-2 space-y-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        router.push("/profile");
+                        setToggleDropdown(false);
+                      }}
+                      className="mt-2 w-full black_btn"
+                    >
+                      My Profile
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setToggleDropdown(false);
+                        signOut();
+                      }}
+                      className="mt-2 w-full black_btn"
+                    >
+                      Sign Out
+                    </button>
+                  </div>
+                )}
+              </div>
+              {/* <Link href="/profile">
               <Image
                 src={session?.user?.image || ""}
                 width={37}
@@ -114,24 +121,25 @@ const Nav = () => {
                 alt="profile"
               />
             </Link> */}
-          </div>
-        ) : (
-          <>
-            {providers &&
-              Object.values(providers).map((provider: any) => (
-                <button
-                  type="button"
-                  key={provider.name}
-                  onClick={() => {
-                    signIn(provider.id);
-                  }}
-                  className="outline_btn"
-                >
-                  Sign in
-                </button>
-              ))}
-          </>
-        )}
+            </>
+          ) : (
+            <>
+              {providers &&
+                Object.values(providers).map((provider: any) => (
+                  <button
+                    type="button"
+                    key={provider.name}
+                    onClick={() => {
+                      signIn(provider.id);
+                    }}
+                    className="outline_btn"
+                  >
+                    Sign in
+                  </button>
+                ))}
+            </>
+          )}
+        </div>
       </div>
 
       {/* Mobile Navigation */}
