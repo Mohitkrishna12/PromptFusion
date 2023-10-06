@@ -15,7 +15,7 @@ const Form = ({ type, submitting, handleSubmit,title,subTitle,children }:any) =>
       >
         {children}
         <div className="flex-end mx-3 mb-5 gap-4">
-          <Link href="/" className="text-gray-300 font-semibold text-sm">
+          <Link href="/" className="text-gray-300 font-semibold text-sm hover:text-white hover:font-bold">
             Cancel
           </Link>
 

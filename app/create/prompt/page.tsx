@@ -8,24 +8,48 @@ import Form from "@components/Form";
 
 const CreatePrompt = () => {
   const router = useRouter();
-  const { data: session }:any = useSession();
+  const { data: session }: any = useSession();
 
   const [submitting, setIsSubmitting] = useState(false);
   const [post, setPost] = useState({ prompt: "", tag: "" });
+  const [tags, setTags]:any = useState([]); 
+  const [inputValue, setInputValue] = useState("");
 
-  const createPrompt = async (e:any) => {
+   const handleInputChange = (e:any) => {
+     const value = e.target.value;
+     // Use a regular expression to remove special characters
+     const sanitizedValue = value.replace(/[^a-zA-Z0-9\s]/g, "");
+     setInputValue(sanitizedValue);
+   };
+
+   const handleInputKeyPress = (e:any) => {
+    e.preventDefault();
+     if (e.key === " ") {
+       // Add the tag to the list when the user presses Space
+       const newTag = '#'+inputValue.trim();
+       if (newTag && newTag.length>1) {
+         setTags([...tags, newTag]);
+         setInputValue("");
+       }
+     }
+   };
+
+   const handleTagClick = (tag:any) => {
+     // Remove the tag when clicked
+     setTags(tags.filter((t:any) => t !== tag));
+   };
+
+  const createPrompt = async (e: any) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     try {
-      const tagArray = post?.tag?.split(/[ ,]+/);
-      console.log(tagArray)
       const response = await fetch("/api/prompt/new", {
         method: "POST",
         body: JSON.stringify({
           prompt: post.prompt,
           userId: session?.user?.id,
-          tag: tagArray,
+          tag: tags,
         }),
       });
 
@@ -60,21 +84,31 @@ const CreatePrompt = () => {
           className="form_textarea "
         />
       </label>
-
+      <div className="flex flex-wrap">
+        {tags.map((tag: any) => (
+          <div
+            key={tag}
+            className="font-inter text-base font-bold green_gradient px-2 py-1 hover:text-gray-200 cursor-pointer transition duration-200"
+            onClick={() => handleTagClick(tag)}
+          >
+            {tag}
+          </div>
+        ))}
+      </div>
       <label>
         <span className="font-satoshi font-semibold text-base text-gray-400">
           Field of Prompt{" "}
           <span className="font-normal">
-            (Separate tags with spaces or commas e.g., #blockchain #dev
-            or #product, #webdevelopment)
+            (Hit Space to add tag and click the tag to remove)
           </span>
         </span>
         <input
-          value={post.tag}
-          onChange={(e) => setPost({ ...post, tag: e.target.value })}
+          value={inputValue}
+          onChange={handleInputChange}
+          onKeyUp={handleInputKeyPress}
           type="text"
-          placeholder="#Tag"
-          required
+          placeholder="#Tags"
+          required={tags.length < 1}
           className="form_input"
         />
       </label>
