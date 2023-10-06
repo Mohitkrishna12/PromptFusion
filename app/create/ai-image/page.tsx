@@ -74,7 +74,7 @@ const CreatePost = () => {
         });
         await response.json();
         if(response.ok){
-          router.push('/');
+          router.push('/ai-image');
         }
       } catch (error) {
         alert(error);
