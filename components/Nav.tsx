@@ -89,7 +89,7 @@ const Nav = () => {
 
                 {toggleDropdown && (
                   <div className="absolute right-0 mt-2 w-56 bg-white/20 rounded-lg shadow-lg p-2 space-y-2">
-                    <button
+                    {/* <button
                       type="button"
                       onClick={() => {
                         router.push("/profile");
@@ -98,7 +98,7 @@ const Nav = () => {
                       className="mt-2 w-full black_btn"
                     >
                       My Profile
-                    </button>
+                    </button> */}
                     <button
                       type="button"
                       onClick={() => {
@@ -144,6 +144,22 @@ const Nav = () => {
 
       {/* Mobile Navigation */}
       <div className="sm:hidden flex relative">
+        <Link
+          href="/ai-image"
+          className={`py-1.5 px-3 transition-all font-bold text-base ${
+            path === "/ai-image" ? "green_gradient" : "text-white"
+          } hover:text-gray-300 text-center font-inter flex items-center justify-center`}
+        >
+          Ai-Image
+        </Link>
+        <Link
+          href="/prompt"
+          className={`py-1.5 px-3 transition-all font-bold text-base ${
+            path === "/prompt" ? "green_gradient" : "text-white"
+          } hover:text-gray-300 text-center font-inter flex items-center justify-center`}
+        >
+          Prompt
+        </Link>
         {session?.user ? (
           <div className="flex">
             <Image
@@ -156,20 +172,16 @@ const Nav = () => {
             />
 
             {toggleDropdown && (
-              <div className="dropdown">
+              <div className="dropdown !bg-white/20">
                 <Link
-                  href="/profile"
-                  className="dropdown_link"
-                  onClick={() => setToggleDropdown(false)}
+                  href={
+                    path === "/ai-image" || path === "/prompt"
+                      ? "/create" + path
+                      : ""
+                  }
+                  className="py-1.5 px-5 w-full bg-black rounded-md transition-all font-bold text-white text-base text-center hover:text-gray-300 font-inter flex items-center justify-center"
                 >
-                  My Profile
-                </Link>
-                <Link
-                  href="/create-prompt"
-                  className="dropdown_link"
-                  onClick={() => setToggleDropdown(false)}
-                >
-                  Create Prompt
+                  Create
                 </Link>
                 <button
                   type="button"
@@ -177,7 +189,7 @@ const Nav = () => {
                     setToggleDropdown(false);
                     signOut();
                   }}
-                  className="mt-5 w-full black_btn"
+                  className="py-1.5 px-5 font-bold w-full bg-black rounded-md text-white text-base"
                 >
                   Sign Out
                 </button>
@@ -194,7 +206,7 @@ const Nav = () => {
                   onClick={() => {
                     signIn(provider.id);
                   }}
-                  className="black_btn"
+                  className="outline_btn"
                 >
                   Sign in
                 </button>
