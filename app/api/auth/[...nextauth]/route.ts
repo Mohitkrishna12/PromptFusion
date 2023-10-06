@@ -6,7 +6,7 @@ import { connectToDB } from "@utils/database";
 
 //every next.js route is a serverless route ->lambda function
 
-const handler: NextAuthOptions = NextAuth({
+const handler = NextAuth({
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_ID ?? "",
@@ -44,6 +44,6 @@ const handler: NextAuthOptions = NextAuth({
       }
     },
   },
-});
+} satisfies NextAuthOptions);
 
 export { handler as GET, handler as POST };
