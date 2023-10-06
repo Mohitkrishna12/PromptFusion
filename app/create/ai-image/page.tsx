@@ -13,13 +13,19 @@ const CreatePost = () => {
     photo: "",
   });
   const router = useRouter();
-  const { data: session }: any = useSession();
+  const { data: session, status }: any = useSession();
   const [submitting, setIsSubmitting] = useState(false);
   const [generatingImg, setGeneratingImg] = useState(false);
   const [allPrompts, setAllPrompts] = useState([]);
   const [suggestionsVisible, setSuggestionsVisible] = useState(false); 
   const [formError,setFormError] = useState(false);
   const inputRef = useRef(null);
+
+  useEffect(()=>{
+    if (status === "unauthenticated") {
+       router.push("/");;
+    }
+  },[status])
 
   const fetchPosts = async () => {
     const response = await fetch("/api/prompt");

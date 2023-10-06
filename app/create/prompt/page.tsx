@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
@@ -8,12 +8,19 @@ import Form from "@components/Form";
 
 const CreatePrompt = () => {
   const router = useRouter();
-  const { data: session }: any = useSession();
+  const { data: session, status }: any = useSession();
 
   const [submitting, setIsSubmitting] = useState(false);
   const [post, setPost] = useState({ prompt: "", tag: "" });
   const [tags, setTags]:any = useState([]); 
   const [inputValue, setInputValue] = useState("");
+
+  
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/");
+    }
+  }, [status]);
 
    const handleInputChange = (e:any) => {
      const value = e.target.value;
