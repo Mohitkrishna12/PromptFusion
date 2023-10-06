@@ -3,7 +3,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Form from "@components/Form";
-import Autosuggest from "react-autosuggest";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Loader from "@components/Loader";
