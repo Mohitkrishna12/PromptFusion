@@ -31,7 +31,8 @@ const CreatePrompt = () => {
 
    const handleInputKeyPress = (e:any) => {
     e.preventDefault();
-     if (e.keyCode === 32 || e.keyCode === 229) {
+    console.log(e)
+     if (e.keyCode === 32) {
        // Add the tag to the list when the user presses Space
        const newTag = '#'+inputValue.trim();
        if (newTag && newTag.length>1) {
