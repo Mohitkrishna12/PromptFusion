@@ -4,8 +4,8 @@ import "@styles/globals.css";
 import { ReactNode } from "react";
 
 export const metadata = {
-  title: "Share Prompt",
-  description: "Discover new prompt",
+  title: "Prompt Fusion",
+  description: "PromptFusion is an open-source AI prompting tool to Inspire, Create, and Share Unique Prompts, Transforming Ideas into AI-Generated Art!",
 };
 
 const RootLayout = ({ children }: { children: ReactNode }) => {

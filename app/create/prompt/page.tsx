@@ -31,7 +31,7 @@ const CreatePrompt = () => {
 
    const handleInputKeyPress = (e:any) => {
     e.preventDefault();
-     if (e.key === " ") {
+     if (e.keyCode === 32) {
        // Add the tag to the list when the user presses Space
        const newTag = '#'+inputValue.trim();
        if (newTag && newTag.length>1) {
@@ -41,9 +41,10 @@ const CreatePrompt = () => {
      }
    };
 
-   const handleTagClick = (tag:any) => {
+   const handleTagClick = (index:number) => {
      // Remove the tag when clicked
-     setTags(tags.filter((t:any) => t !== tag));
+     const updatedTags = tags?.filter((t: any,i:number) => i !== index);
+     setTags(updatedTags);
    };
 
   const createPrompt = async (e: any) => {
@@ -92,11 +93,11 @@ const CreatePrompt = () => {
         />
       </label>
       <div className="flex flex-wrap">
-        {tags.map((tag: any) => (
+        {tags.map((tag: any,index:number) => (
           <div
-            key={tag}
+            key={index}
             className="font-inter text-base font-bold green_gradient px-2 py-1 hover:text-gray-200 cursor-pointer transition duration-200"
-            onClick={() => handleTagClick(tag)}
+            onClick={() => handleTagClick(index)}
           >
             {tag}
           </div>
